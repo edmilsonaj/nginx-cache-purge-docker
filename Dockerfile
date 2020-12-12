@@ -1,4 +1,4 @@
-FROM nginx:1.19.0-alpine AS builder
+FROM nginx:1.19.5-alpine AS builder
 
 # nginx:alpine contains NGINX_VERSION environment variable, like so:
 # ENV NGINX_VERSION 1.19.0
@@ -43,7 +43,7 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') && \
     sh -c "./configure --with-compat $CONFARGS --add-dynamic-module=/usr/src/ngx_http_cache_purge_module/*" && make modules
 
 # Production container starts here
-FROM nginx:alpine
+FROM nginx:1.19.5-alpine
 COPY --from=builder /usr/src/nginx/nginx-${NGINX_VERSION}/objs/*_module.so /etc/nginx/modules/
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
